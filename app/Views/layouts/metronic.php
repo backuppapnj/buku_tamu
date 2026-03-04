@@ -14,7 +14,8 @@
 <?php 
     // Determine body class based on current route
     $is_admin = strpos(current_url(), '/admin') !== false;
-    $body_class = $is_admin ? "header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed" : "page-bg";
+    // Hapus kelas aside-* agar wrapper tidak memiliki padding kiri 330px
+    $body_class = $is_admin ? "header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed" : "page-bg";
     $body_style = $is_admin ? "style=\"--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px\"" : "style=\"background-image: url('" . base_url('assets/media/auth/bg4.jpg') . "'); background-size: cover;\"";
 ?>
 <body id="kt_body" class="<?= $body_class ?>" <?= $body_style ?>>
