@@ -9,6 +9,9 @@
     <!-- Global Stylesheets Bundle(used by all pages) -->
     <link href="<?= base_url('assets/plugins/global/plugins.bundle.css') ?>" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/css/style.bundle.css') ?>" rel="stylesheet" type="text/css" />
+    <?php if ($is_admin ?? false): ?>
+    <link href="<?= base_url('assets/plugins/custom/datatables/datatables.bundle.css') ?>" rel="stylesheet" type="text/css" />
+    <?php endif; ?>
     <?= $this->renderSection('styles') ?>
 </head>
 <?php 
@@ -46,6 +49,9 @@
     <!-- Global Javascript Bundle(used by all pages) -->
     <script src="<?= base_url('assets/plugins/global/plugins.bundle.js') ?>"></script>
     <script src="<?= base_url('assets/js/scripts.bundle.js') ?>"></script>
+    <?php if ($is_admin ?? false): ?>
+    <script src="<?= base_url('assets/plugins/custom/datatables/datatables.bundle.js') ?>"></script>
+    <?php endif; ?>
     
     <!-- Custom Scripts -->
     <?= $this->renderSection('scripts') ?>

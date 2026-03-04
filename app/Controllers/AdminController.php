@@ -44,8 +44,8 @@ class AdminController extends Controller
             'title' => 'Daftar Pengunjung',
             'data'  => $this->tamuModel->pengunjung()
                 ->orderBy('tanggal', 'DESC')
-                ->paginate(20),
-            'pager' => $this->tamuModel->pager,
+                ->findAll(),
+            'pager' => null,
         ];
 
         return view('admin/pengunjung_list', $data);
@@ -62,8 +62,8 @@ class AdminController extends Controller
             'title' => 'Daftar Tamu',
             'data'  => $this->tamuModel->tamu()
                 ->orderBy('tanggal', 'DESC')
-                ->paginate(20),
-            'pager' => $this->tamuModel->pager,
+                ->findAll(),
+            'pager' => null,
         ];
 
         return view('admin/tamu_list', $data);

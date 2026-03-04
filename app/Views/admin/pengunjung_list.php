@@ -103,12 +103,7 @@
         </div>
     </div>
 
-    <!-- Pagination -->
-    <?php if ($pager): ?>
-        <div class="mt-4">
-            <?= $pager->links() ?>
-        </div>
-    <?php endif; ?>
+
 </div>
 
 <!-- Modal Form Pengunjung -->
@@ -173,11 +168,18 @@
         
         if (typeof $ !== 'undefined' && $.fn.DataTable) {
             $('#kt_table_pengunjung').DataTable({
-                "info": false,
+                "info": true,
                 "order": [],
-                "pageLength": 20,
-                "paging": false,
-                "searching": false
+                "pageLength": 10,
+                "paging": true,
+                "searching": true,
+                "language": {
+                    "lengthMenu": "Tampilkan _MENU_",
+                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    "search": "Cari:",
+                    "emptyTable": "Tidak ada data tersedia",
+                    "zeroRecords": "Tidak ada data yang cocok"
+                }
             });
         }
     });
