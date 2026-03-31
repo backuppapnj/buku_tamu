@@ -13,129 +13,191 @@
 </style>
 <?= $this->endSection() ?>
 
+<?php
+$bulanList = [
+    1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+    5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+];
+?>
+
 <?= $this->section('content') ?>
 <div class="container-xxl mt-5" id="kt_content_container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="mb-0">Laporan Kunjungan</h2>
-            <p class="text-muted mb-0">Statistik dan data kunjungan</p>
-        </div>
-    </div>
+    <!--begin::Row - Filter & Header-->
+    <div class="row g-5 g-xl-8 mb-5">
+        <!--begin::Col - Filter-->
+        <div class="col-xl-12">
+            <!--begin::Card - Filter-->
+            <div class="card card-flush">
+                <!--begin::Card header-->
+                <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <h2 class="mb-0">Filter Laporan</h2>
+                    </div>
+                    <!--end::Card title-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body">
+                    <form method="get" class="row g-3 align-items-end">
+                        <!--begin::Col - Bulan-->
+                        <div class="col-md-4">
+                            <label for="bulan" class="form-label fw-semibold">Bulan</label>
+                            <select name="bulan" id="bulan" class="form-select form-select-solid">
+                                <?php foreach ($bulanList as $key => $nama): ?>
+                                    <option value="<?= $key ?>" <?= $bulan == $key ? 'selected' : '' ?>>
+                                        <?= $nama ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <!--end::Col - Bulan-->
 
-    <!-- Filter -->
-    <div class="card card-flush shadow-sm mb-5">
-        <div class="card-body">
-            <form method="get" class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label for="bulan" class="form-label fw-bold">Bulan</label>
-                    <select name="bulan" id="bulan" class="form-select form-select-solid">
-                        <?php
-                        $bulanList = [
-                            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-                            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-                            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-                        ];
-                        foreach ($bulanList as $key => $nama):
-                        ?>
-                            <option value="<?= $key ?>" <?= $bulan == $key ? 'selected' : '' ?>>
-                                <?= $nama ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="tahun" class="form-label fw-bold">Tahun</label>
-                    <select name="tahun" id="tahun" class="form-select form-select-solid">
-                        <?php for ($t = date('Y'); $t >= 2021; $t--): ?>
-                            <option value="<?= $t ?>" <?= $tahun == $t ? 'selected' : '' ?>>
-                                <?= $t ?>
-                            </option>
-                        <?php endfor; ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="ki-duotone ki-filter fs-2"><span class="path1"></span><span class="path2"></span></i> Filter
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+                        <!--begin::Col - Tahun-->
+                        <div class="col-md-4">
+                            <label for="tahun" class="form-label fw-semibold">Tahun</label>
+                            <select name="tahun" id="tahun" class="form-select form-select-solid">
+                                <?php for ($t = date('Y'); $t >= 2021; $t--): ?>
+                                    <option value="<?= $t ?>" <?= $tahun == $t ? 'selected' : '' ?>>
+                                        <?= $t ?>
+                                    </option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                        <!--end::Col - Tahun-->
 
-    <!-- Chart -->
-    <div class="card card-flush shadow-sm mb-5">
-        <div class="card-header border-0 pt-5">
-            <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">Grafik Kunjungan Tahun <?= esc($tahun) ?></span>
-            </h3>
-        </div>
-        <div class="card-body pt-0">
-            <div class="chart-container">
-                <canvas id="kunjunganChart"></canvas>
+                        <!--begin::Col - Tombol Filter-->
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="ki-duotone ki-filter fs-3">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
+                                Tampilkan
+                            </button>
+                        </div>
+                        <!--end::Col - Tombol Filter-->
+                    </form>
+                </div>
+                <!--end::Card body-->
             </div>
+            <!--end::Card - Filter-->
         </div>
+        <!--end::Col - Filter-->
     </div>
+    <!--end::Row - Filter & Header-->
 
-    <!-- Tabel Data -->
-    <div class="card card-flush shadow-sm">
-        <div class="card-header border-0 pt-5">
-            <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">Data <?= $bulanList[$bulan] ?> <?= $tahun ?></span>
-            </h3>
-            <div class="card-toolbar">
-                <span class="badge py-3 px-4 fs-7 badge-light-primary"><?= count($dataLaporan) ?> data</span>
+    <!--begin::Row - Chart-->
+    <div class="row g-5 g-xl-8 mb-5">
+        <!--begin::Col - Chart-->
+        <div class="col-xl-12">
+            <!--begin::Card - Chart-->
+            <div class="card card-flush">
+                <!--begin::Card header-->
+                <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <h2 class="mb-0">Grafik Kunjungan Tahun <?= esc($tahun) ?></h2>
+                    </div>
+                    <!--end::Card title-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="kunjunganChart"></canvas>
+                    </div>
+                </div>
+                <!--end::Card body-->
             </div>
+            <!--end::Card - Chart-->
         </div>
-        <div class="card-body pt-0">
-            <div class="table-responsive">
-                <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_laporan">
-                    <thead>
-                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                            <th class="w-50px">#</th>
-                            <th>Tanggal</th>
-                            <th>Jenis</th>
-                            <th>Nama</th>
-                            <th>Instansi/Alamat</th>
-                            <th>Tujuan</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-600 fw-semibold">
-                        <?php if (empty($dataLaporan)): ?>
-                            <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">
-                                    Tidak ada data untuk periode ini
-                                </td>
+        <!--end::Col - Chart-->
+    </div>
+    <!--end::Row - Chart-->
+
+    <!--begin::Row - Tabel-->
+    <div class="row g-5 g-xl-8">
+        <!--begin::Col - Tabel-->
+        <div class="col-xl-12">
+            <!--begin::Card - Tabel Data-->
+            <div class="card card-flush">
+                <!--begin::Card header-->
+                <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <h2 class="mb-0">Data <?= $bulanList[$bulan] ?> <?= $tahun ?></h2>
+                    </div>
+                    <!--end::Card title-->
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar">
+                        <span class="badge py-3 px-4 fs-7 badge-light-primary"><?= count($dataLaporan) ?> data</span>
+                    </div>
+                    <!--end::Card toolbar-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body pt-0">
+                    <!--begin::Table-->
+                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_laporan">
+                        <!--begin::Table head-->
+                        <thead>
+                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <th class="w-50px">#</th>
+                                <th>Tanggal</th>
+                                <th>Jenis</th>
+                                <th>Nama</th>
+                                <th>Instansi / Alamat</th>
+                                <th>Tujuan</th>
                             </tr>
-                        <?php else: ?>
-                            <?php $no = 1; foreach ($dataLaporan as $row): ?>
+                        </thead>
+                        <!--end::Table head-->
+                        <!--begin::Table body-->
+                        <tbody class="text-gray-600 fw-semibold">
+                            <?php if (empty($dataLaporan)): ?>
                                 <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td>
-                                        <div class="text-gray-800 fw-bold"><?= date('d/m/Y', strtotime($row['tanggal'])) ?></div>
-                                        <div class="text-muted"><?= date('H:i', strtotime($row['tanggal'])) ?></div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-light-<?= $row['jenis_tamu'] === 'pengunjung' ? 'primary' : 'success' ?>">
-                                            <?= ucfirst($row['jenis_tamu']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-gray-800 fw-bold"><?= esc($row['nama']) ?></td>
-                                    <td>
-                                        <?= esc($row['jenis_tamu'] === 'tamu' ? ($row['instansi'] ?? '-') : ($row['alamat'] ?? '-')) ?>
-                                    </td>
-                                    <td>
-                                        <span class="d-inline-block text-truncate" style="max-width: 150px;" title="<?= esc($row['tujuan']) ?>">
-                                            <?= esc($row['tujuan'] ?? '-') ?>
-                                        </span>
+                                    <td colspan="6" class="text-center py-10 text-muted">
+                                        Tidak ada data untuk periode ini
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php else: ?>
+                                <?php $no = 1; foreach ($dataLaporan as $row): ?>
+                                    <tr>
+                                        <td><?= $no++ ?></td>
+                                        <td>
+                                            <span class="text-gray-800 fw-semibold"><?= date('d/m/Y', strtotime($row['tanggal'])) ?></span>
+                                            <span class="text-muted d-block fs-7"><?= date('H:i', strtotime($row['tanggal'])) ?></span>
+                                        </td>
+                                        <td>
+                                            <?php if ($row['jenis_tamu'] === 'pengunjung'): ?>
+                                                <span class="badge badge-light-primary">Pengunjung</span>
+                                            <?php else: ?>
+                                                <span class="badge badge-light-success">Tamu</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-gray-800 fw-semibold"><?= esc($row['nama']) ?></td>
+                                        <td><?= esc($row['jenis_tamu'] === 'tamu' ? ($row['instansi'] ?? '-') : ($row['alamat'] ?? '-')) ?></td>
+                                        <td>
+                                            <span class="d-inline-block text-truncate" style="max-width: 200px;" title="<?= esc($row['tujuan']) ?>">
+                                                <?= esc($row['tujuan'] ?? '-') ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                        <!--end::Table body-->
+                    </table>
+                    <!--end::Table-->
+                </div>
+                <!--end::Card body-->
             </div>
+            <!--end::Card - Tabel Data-->
         </div>
+        <!--end::Col - Tabel-->
     </div>
+    <!--end::Row - Tabel-->
 </div>
 <?= $this->endSection() ?>
 
@@ -144,25 +206,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        if (typeof $ !== 'undefined' && $.fn.DataTable) {
-            $('#kt_table_laporan').DataTable({
-                "info": true,
-                "order": [],
-                "pageLength": 10,
-                "paging": true,
-                "searching": true,
-                "language": {
-                    "lengthMenu": "Tampilkan _MENU_",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    "search": "Cari:",
-                    "emptyTable": "Tidak ada data tersedia",
-                    "zeroRecords": "Tidak ada data yang cocok"
-                }
-            });
-        }
-
         // Fetch chart data
-        fetch('/admin/chart?tahun=<?= $tahun ?>')
+        fetch("<?= base_url('admin/chart?tahun=' . $tahun) ?>")
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('kunjunganChart').getContext('2d');

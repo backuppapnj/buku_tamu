@@ -6,122 +6,137 @@
 
 <?= $this->section('content') ?>
 <div class="container-xxl mt-5" id="kt_content_container">
+    <!--begin::Card-->
     <div class="card card-flush">
+        <!--begin::Card header-->
         <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+            <!--begin::Card title-->
             <div class="card-title">
                 <h2 class="mb-0">Daftar Tamu</h2>
             </div>
+            <!--end::Card title-->
+            <!--begin::Card toolbar-->
             <div class="card-toolbar gap-3">
-                <button type="button" class="btn btn-primary" onclick="openCreateModal()">
-                    Tambah Tamu
-                </button>
-                <a href="/admin/laporan" class="btn btn-light-success">
+                <a href="<?= base_url('admin/laporan') ?>" class="btn btn-light-success">
+                    <i class="ki-duotone ki-chart fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
                     Lihat Laporan
                 </a>
+                <button type="button" class="btn btn-primary" onclick="openCreateModal()">
+                    <i class="ki-duotone ki-plus fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                    Tambah Tamu
+                </button>
             </div>
+            <!--end::Card toolbar-->
         </div>
+        <!--end::Card header-->
+        <!--begin::Card body-->
         <div class="card-body pt-0">
-            <div class="table-responsive">
-                <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_tamu">
-                    <thead>
-                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                            <th class="w-50px">#</th>
-                            <th>Tanggal</th>
-                            <th>Nama</th>
-                            <th>Instansi</th>
-                            <th>No. HP</th>
-                            <th>Tujuan</th>
-                            <th class="text-end min-w-100px">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-600 fw-semibold">
-                        <?php if (empty($data)): ?>
-                            <tr>
-                                <td colspan="7" class="text-center py-4 text-muted">
-                                    Belum ada data tamu
-                                </td>
-                            </tr>
-                        <?php else: ?>
-                            <?php 
-                            $no = 1;
-                            foreach ($data as $row): 
-                            ?>
-                                <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td>
-                                        <div class="text-gray-800 fw-bold"><?= date('d/m/Y', strtotime($row['tanggal'])) ?></div>
-                                        <div class="text-muted"><?= date('H:i', strtotime($row['tanggal'])) ?></div>
-                                    </td>
-                                    <td class="text-gray-800 fw-bold"><?= esc($row['nama']) ?></td>
-                                    <td><?= esc($row['instansi'] ?? '-') ?></td>
-                                    <td><?= esc($row['hp'] ?? '-') ?></td>
-                                    <td><?= esc($row['tujuan'] ?? '-') ?></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-light-primary" onclick="openEditModal(<?= htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8') ?>)">Edit</button>
-                                        <button class="btn btn-sm btn-light-danger" onclick="deleteData(<?= $row['id'] ?>)">Hapus</button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+            <!--begin::Table-->
+            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_tamu">
+                <!--begin::Table head-->
+                <thead>
+                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                        <th class="w-50px">#</th>
+                        <th>Tanggal</th>
+                        <th>Nama</th>
+                        <th>Instansi</th>
+                        <th>No. HP</th>
+                        <th>Tujuan</th>
+                        <th class="text-end min-w-100px">Aksi</th>
+                    </tr>
+                </thead>
+                <!--end::Table head-->
+                <!--begin::Table body-->
+                <tbody class="text-gray-600 fw-semibold">
+                </tbody>
+                <!--end::Table body-->
+            </table>
+            <!--end::Table-->
         </div>
+        <!--end::Card body-->
     </div>
-
-
+    <!--end::Card-->
 </div>
 
-<!-- Modal Form Tamu -->
+<!--begin::Modal - Form Tamu-->
 <div class="modal fade" tabindex="-1" id="kt_modal_form">
+    <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered">
+        <!--begin::Modal content-->
         <div class="modal-content">
+            <!--begin::Modal header-->
             <div class="modal-header">
                 <h3 class="modal-title" id="modal_title">Tambah Tamu</h3>
+                <!--begin::Modal close-->
                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                    <span class="fs-1">&times;</span>
+                    <i class="ki-duotone ki-cross fs-2">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
                 </div>
+                <!--end::Modal close-->
             </div>
-
+            <!--end::Modal header-->
+            <!--begin::Modal body-->
             <form id="kt_form" onsubmit="submitForm(event)">
                 <div class="modal-body">
                     <input type="hidden" id="input_id" name="id">
                     <input type="hidden" name="jenis_tamu" value="tamu">
-                    
+
+                    <!--begin::Input group-->
                     <div class="mb-5">
                         <label class="required form-label">Nama</label>
                         <input type="text" class="form-control form-control-solid" name="nama" id="input_nama" required placeholder="Nama Lengkap"/>
                     </div>
-                    
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
                     <div class="mb-5">
                         <label class="required form-label">Instansi</label>
                         <input type="text" class="form-control form-control-solid" name="instansi" id="input_instansi" required placeholder="Asal Instansi"/>
                     </div>
-                    
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
                     <div class="mb-5">
                         <label class="form-label">No. HP</label>
                         <input type="text" class="form-control form-control-solid" name="hp" id="input_hp" placeholder="08xxxxxxxxxx"/>
                     </div>
+                    <!--end::Input group-->
 
-                    <div class="mb-5">
+                    <!--begin::Input group-->
+                    <div class="mb-0">
                         <label class="required form-label">Tujuan</label>
                         <textarea class="form-control form-control-solid" name="tujuan" id="input_tujuan" rows="3" required placeholder="Tujuan Kunjungan"></textarea>
                     </div>
+                    <!--end::Input group-->
                 </div>
-
+                <!--end::Modal body-->
+                <!--begin::Modal footer-->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-primary" id="btn_submit">
                         <span class="indicator-label">Simpan</span>
                         <span class="indicator-progress d-none">
-                            Mohon tunggu... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            Mohon tunggu...
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </span>
                     </button>
                 </div>
+                <!--end::Modal footer-->
             </form>
         </div>
+        <!--end::Modal content-->
     </div>
+    <!--end::Modal dialog-->
 </div>
+<!--end::Modal - Form Tamu-->
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -131,43 +146,43 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         currentModal = new bootstrap.Modal(document.getElementById('kt_modal_form'));
-        
+
         if (typeof $ !== 'undefined' && $.fn.DataTable) {
-                        $('#kt_table_tamu').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    "url": "/admin/tamu/dt",
-                    "type": "POST"
+            $('#kt_table_tamu').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "<?= base_url('admin/tamu/dt') ?>",
+                    type: "POST"
                 },
-                "columns": [
-                    { 
-                        "data": "id",
-                        "orderable": false,
-                        "searchable": false,
-                        "render": function (data, type, row, meta) {
+                columns: [
+                    {
+                        data: "id",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { "data": "tanggal" },
-                    { "data": "nama" },
-                    { "data": "instansi" },
-                    { "data": "hp" },
-                    { "data": "tujuan" },
-                    { "data": "aksi", "orderable": false, "searchable": false, "className": "text-end" }
+                    { data: "tanggal" },
+                    { data: "nama" },
+                    { data: "instansi" },
+                    { data: "hp" },
+                    { data: "tujuan" },
+                    { data: "aksi", orderable: false, searchable: false, className: "text-end" }
                 ],
-                "info": true,
-                "order": [[1, "desc"]],
-                "pageLength": 10,
-                "paging": true,
-                "searching": true,
-                "language": {
-                    "lengthMenu": "Tampilkan _MENU_",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    "search": "Cari:",
-                    "emptyTable": "Tidak ada data tersedia",
-                    "zeroRecords": "Tidak ada data yang cocok",
-                    "processing": "Memproses data..."
+                info: true,
+                order: [[1, "desc"]],
+                pageLength: 10,
+                paging: true,
+                searching: true,
+                language: {
+                    lengthMenu: "Tampilkan _MENU_",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    search: "Cari:",
+                    emptyTable: "Tidak ada data tersedia",
+                    zeroRecords: "Tidak ada data yang cocok",
+                    processing: "Memproses data..."
                 }
             });
         }
@@ -180,8 +195,8 @@
         timer: 3000,
         timerProgressBar: true,
         didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer
-            toast.onmouseleave = Swal.resumeTimer
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
         }
     });
 
@@ -205,13 +220,13 @@
 
     async function submitForm(e) {
         e.preventDefault();
-        
+
         const form = document.getElementById('kt_form');
         const formData = new FormData(form);
         const id = document.getElementById('input_id').value;
         const btnSubmit = document.getElementById('btn_submit');
-        
-        const url = id ? `/admin/tamu/update/${id}` : `/admin/tamu/store`;
+
+        const url = id ? "<?= base_url('admin/tamu/update/') ?>" + id : "<?= base_url('admin/tamu/store') ?>";
 
         // Loading state
         btnSubmit.setAttribute('data-kt-indicator', 'on');
@@ -234,7 +249,7 @@
                 });
             } else {
                 let errorMsg = result.message || 'Terjadi kesalahan';
-                if(result.errors) {
+                if (result.errors) {
                     errorMsg = Object.values(result.errors).join('\n');
                 }
                 Swal.fire('Error', errorMsg, 'error');
@@ -260,7 +275,7 @@
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`/admin/tamu/delete/${id}`, {
+                    const response = await fetch("<?= base_url('admin/tamu/delete/') ?>" + id, {
                         method: 'POST',
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'

@@ -4,55 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($title ?? 'Buku Tamu') ?></title>
-    <!-- Fonts -->
+    <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <!-- Global Stylesheets Bundle(used by all pages) -->
+    <!--end::Fonts-->
+    <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="<?= base_url('assets/plugins/global/plugins.bundle.css') ?>" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/css/style.bundle.css') ?>" rel="stylesheet" type="text/css" />
+    <!--end::Global Stylesheets Bundle-->
     <?php if ($is_admin ?? false): ?>
     <link href="<?= base_url('assets/plugins/custom/datatables/datatables.bundle.css') ?>" rel="stylesheet" type="text/css" />
     <?php endif; ?>
     <?= $this->renderSection('styles') ?>
 </head>
-<?php 
-    // Determine body class based on current route
+<?php
+    // Determine if current page is admin
     $is_admin = strpos(current_url(), '/admin') !== false;
-    // Hapus kelas aside-* agar wrapper tidak memiliki padding kiri 330px
-    $body_class = $is_admin ? "header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed" : "page-bg";
-    $body_style = $is_admin ? "style=\"--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px\"" : "style=\"background-image: url('" . base_url('assets/media/auth/bg4.jpg') . "'); background-size: cover;\"";
+    $body_class = $is_admin ? "header-tablet-and-mobile-fixed aside-enabled" : "page-bg";
+    $body_style = $is_admin ? "" : "style=\"background-image: url('" . base_url('assets/media/auth/bg4.jpg') . "'); background-size: cover;\"";
 ?>
 <body id="kt_body" class="<?= $body_class ?>" <?= $body_style ?>>
-    <!-- Main Content -->
+    <!--begin::Theme mode setup on page load-->
+    <script>
+        var defaultThemeMode = "light";
+        var themeMode;
+        if (document.documentElement) {
+            if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+                themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+            } else {
+                if (localStorage.getItem("data-bs-theme") !== null) {
+                    themeMode = localStorage.getItem("data-bs-theme");
+                } else {
+                    themeMode = defaultThemeMode;
+                }
+            }
+            if (themeMode === "system") {
+                themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+            document.documentElement.setAttribute("data-bs-theme", themeMode);
+        }
+    </script>
+    <!--end::Theme mode setup on page load-->
+
+    <!--begin::Main-->
+    <!--begin::Root-->
     <div class="d-flex flex-column flex-root">
+        <!--begin::Page-->
         <div class="page d-flex flex-row flex-column-fluid">
-            <!-- Aside -->
-            <?= $this->renderSection('aside') ?>
-            
-            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper" style="padding-left: 0; padding-top: <?= $is_admin ? '75px' : '0' ?>;">
-                <!-- Header -->
+            <!--begin::Aside-->
+            <?php if ($is_admin): ?>
+                <?= view('partials/sidebar_admin') ?>
+            <?php endif; ?>
+
+            <!--begin::Wrapper-->
+            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+                <!--begin::Header-->
                 <?= $this->renderSection('header') ?>
-                
-                <!-- Content -->
+                <!--end::Header-->
+
+                <!--begin::Content-->
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-
-
-                    <!-- Dynamic Content -->
                     <?= $this->renderSection('content') ?>
                 </div>
-                
-                <!-- Footer -->
-                <?= $this->renderSection('footer') ?>
-            </div>
-        </div>
-    </div>
+                <!--end::Content-->
 
-    <!-- Global Javascript Bundle(used by all pages) -->
+                <!--begin::Footer-->
+                <?php if ($is_admin): ?>
+                    <?= view('partials/footer_admin') ?>
+                <?php endif; ?>
+                <!--end::Footer-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Page-->
+    </div>
+    <!--end::Root-->
+    <!--end::Main-->
+
+    <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="<?= base_url('assets/plugins/global/plugins.bundle.js') ?>"></script>
     <script src="<?= base_url('assets/js/scripts.bundle.js') ?>"></script>
-    <?php if ($is_admin ?? false): ?>
+    <?php if ($is_admin): ?>
     <script src="<?= base_url('assets/plugins/custom/datatables/datatables.bundle.js') ?>"></script>
     <?php endif; ?>
-    
+    <!--end::Global Javascript Bundle-->
+
     <!-- Custom Scripts -->
     <?= $this->renderSection('scripts') ?>
 
